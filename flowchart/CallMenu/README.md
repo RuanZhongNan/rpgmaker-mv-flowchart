@@ -1,6 +1,6 @@
 CallMenu分三部分 onKeyDown、SceneMangager.update、onKeyUp
 # onKeyDown 
-任何一个键位被按下就会触发Input._onKeyDown函数
+任何一个键位被按下就会触发Input._onKeyDown函数  
 这个函数在游戏初始化时就被注册到事件监听上
 ```
 Input._onKeyDown = function(event) {
@@ -18,15 +18,15 @@ Input._onKeyDown = function(event) {
     }
 };
 ```
-在唤出菜单只需关注三个键位"escape","X","numpad 0"
+在唤出菜单只需关注三个键位"escape","X","numpad 0"  
 在Input.keyMapper中这三个键被映射为"escape"
 
-如果按下其中任何一个键
+如果按下其中任何一个键  
 则this(Input)._currentState[buttonName] = true //buttonName = "escape"
 
 # SceneManager.update
 
-每帧更新都会调用这个函数。
+每帧更新都会调用这个函数。  
 在唤出菜单中只有this.updateMain函数比较重要。
 
 ## 进入到循环while (this._accumulator >= this._deltaTime),
@@ -35,15 +35,15 @@ Input._onKeyDown = function(event) {
 ### 第一次循环
 
 #### 1)首先调用this.updateInputData更新按键数据
-此时，this._latestButton 可能为null,也可能为"escape"映射之外的键位
-在这一步，将 this._latestButton 更新为了"escape"
-同时 this._pressedTime = 0 
-同时 this._previousState[name] = this._currentState[name] 将"escape“更新为上一个按键状态
+此时，this._latestButton 可能为null,也可能为"escape"映射之外的键位  
+在这一步，将 this._latestButton 更新为了"escape"  
+同时 this._pressedTime = 0   
+同时 this._previousState[name] = this._currentState[name] 将"escape“更新为上一个按键状态  
 按键数据更新完毕
 
 #### 2)this.changeScene()
 
-if (this.isSceneChanging() && !this.isCurrentSceneBusy()) //false
+if (this.isSceneChanging() && !this.isCurrentSceneBusy()) //false  
 下面看看调用的这两个函数的具体返回值
 
 ```
@@ -52,8 +52,8 @@ SceneManager.isSceneChanging = function() {
 };
 ```
 
-this._exiting 退出游戏时才会为true,一般情况下都为false
-this._nextScene 此时为null
+this._exiting 退出游戏时才会为true,一般情况下都为false  
+this._nextScene 此时为null  
 这个函数返回false
 
 ```
@@ -65,8 +65,8 @@ Scene_Base.prototype.isBusy = function() {
     return this._fadeDuration > 0;
 };
 ```
-this._fadeDuration 用于控制淡入淡出的持续时间,一般情况下为0
-this.isCurrentSceneBusy()函数返回false
+this._fadeDuration 用于控制淡入淡出的持续时间,一般情况下为0  
+this.isCurrentSceneBusy()函数返回false  
 但是由于是 !this.isCurrentSceneBusy() 故&&右边的表达式为true
 
 **第一次循环不进入this.changeScene()**
@@ -86,8 +86,8 @@ SceneManager.updateScene = function() {
     }
 };
 ```
-在第一次循环中,this._scene = Scene_Map
-this_sceneStarted 记录当前场景是否已经开始,显然,Scene_Map已经开始,this._sceneStarted = true。
+在第一次循环中,this._scene = Scene_Map  
+this_sceneStarted 记录当前场景是否已经开始,显然,Scene_Map已经开始,this._sceneStarted = true。  
 !this._sceneStarted && this._scene.isReady() 为false
 
 ```
@@ -142,7 +142,7 @@ Scene_Map.prototype.updateScene = function() {
     }
 };
 ```
-此时SceneManager.isSceneChanging()为false
+此时SceneManager.isSceneChanging()为false  
 可以看到this.updateCallMenu()才是我们需要研究的函数，在这个函数内判断是否唤出菜单。
 
 ##### 进入到this.updateCallMenu()
@@ -161,7 +161,7 @@ Scene_Map.prototype.updateCallMenu = function() {
     }
 };
 ```
-首先判断了菜单是否允许开始，显然是允许的this.isMenuEnabled()返回true
+首先判断了菜单是否允许开始，显然是允许的，this.isMenuEnabled()返回true  
 
 接下来要重点关注this.isMenuCalled函数，这个函数判断菜单是否要被唤出
 ```
@@ -184,14 +184,14 @@ Input._isEscapeCompatible = function(keyName) {
     return keyName === 'cancel' || keyName === 'menu';
 };//true
 ```
-根据前文所述this._latestButton = "escape"
-this._isEscapeCompatible(keyName) 也返回true
-this.isTriggered('escape')返回true
+根据前文所述this._latestButton = "escape"  
+this._isEscapeCompatible(keyName) 也返回true  
+this.isTriggered('escape')返回true  
 this.isMenuCalled()返回true
 
 ##### 进入到this.callMenu()
-在这一步执行切换场景的准备工作
-将Scene_Map运行状态设置为停止
+在这一步执行切换场景的准备工作  
+将Scene_Map运行状态设置为停止  
 将下一个场景设置为Scene_Menu
 
 ```
@@ -218,7 +218,7 @@ SceneManager.goto = function(sceneClass) {
 ```
 this._nextScene 初始化为Scene_Menu实例  
 
-this._scene.stop()将Scene_Map运行状态设置为停止
+this._scene.stop()将Scene_Map运行状态设置为停止  
 主要关注一点Scene_Map._active = false
 
 **运行到这一步，updateScene()结束了。**
@@ -252,15 +252,15 @@ SceneManager.changeScene = function() {
     }
 };
 ```
-据前文所述this.isCurrentSceneBusy()一般情况下为false
-而this.isSceneChanging()由于_nextscene = Scene_Menu 返回值为true
+据前文所述this.isCurrentSceneBusy()一般情况下为fals  
+而this.isSceneChanging()由于_nextscene = Scene_Menu 返回值为true  
 此时会进入changeScene函数执行场景的替换
 
-一开始this._scene = Scene_Map
+一开始this._scene = Scene_Map  
 this._scene.terminate() 执行Scene_Map的停止
 
-**this._scene = this._nextScene 更换当前场景**
-this._scene.create() 创建Scene_Menu
+**this._scene = this._nextScene 更换当前场景**  
+this._scene.create() 创建Scene_Menu  
 具体怎么创建在此就不展开了，想知道可以去研究Scene_Menu.prototype.create函数
 ```
 Scene_Menu.prototype.create = function() {
@@ -288,8 +288,8 @@ SceneManager.updateScene = function() {
 };
 ```
 
-!this._sceneStarted = true
-this._scene.isReady() 当Scene_Menu准备好，返回true
+!this._sceneStarted = true  
+this._scene.isReady() 当Scene_Menu准备好，返回true  
 主要就是确认图片资源是否缓存好，这里假定已经缓存好
 
 this._scene.start()
@@ -300,8 +300,8 @@ Scene_Menu.prototype.start = function()
 };
 ```
 
-至此，唤出菜单就结束了。
-this._scene.update() 调用Scene_Base.prototype.update更新children
+至此，唤出菜单就结束了。  
+this._scene.update() 调用Scene_Base.prototype.update更新children  
 接下来的循环就是窗口状态的更新
 
 # onKeyUp
